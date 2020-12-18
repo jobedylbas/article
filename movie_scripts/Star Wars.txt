@@ -2235,7 +2235,7 @@
                          We will then crush the Rebellion 
                          with one swift stroke.
 
-<b>               EXT. TATOOINE - WASTELAND - 1
+<b>               EXT. TATOOINE - WASTELAND - INITIATION
 </b>
                The speeder stops before what remains of the huge Jawas 
                Sandcrawler. Luke and Ben walk among the smoldering rubble 
@@ -2597,7 +2597,7 @@
 <b>                                     THREEPIO
 </b>                         I don't like the look of this.
 
-<b>               INT. TATOOINE - MOS EISLEY - CANTINA
+<b>               INT. TATOOINE - MOS EISLEY - CANTINA - INITIATION
 </b>
                Strange creatures play exotic big band music on odd-looking 
                instruments as Luke, still giddy, downs a fresh drink and 

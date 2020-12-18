@@ -7,7 +7,7 @@ movieNames = ['Star Wars', 'Spider-man', 'The Matrix', 'The Lion King', 'Hunger 
 
 movieStages = {
     'Star Wars': {
-        'initiation': 'EXT. TATOOINE - WASTELAND - INITIATION',
+        'initiation': 'INT. TATOOINE - MOS EISLEY - CANTINA - INITIATION',
         'return': '',
     },
     'Spider-man': {
