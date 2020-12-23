@@ -104,7 +104,7 @@ for movieName in movieNames:
         # Remove duplicates
         d = d.drop(list(range(len(dic.keys()), len(d.index))))
         d = d.rename(index= lambda s: d.columns[s])
-        d.to_csv('./data/{}.csv'.format(movieName))
+        d.to_csv('./data/base/{}.csv'.format(movieName))
 
         print(chars)
         print(movieName, sceneCounter)

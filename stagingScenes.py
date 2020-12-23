@@ -8,7 +8,7 @@ movieNames = ['Star Wars', 'Spider-man', 'The Matrix', 'The Lion King', 'Hunger 
 movieStages = {
     'Star Wars': {
         'initiation': 'INT. TATOOINE - MOS EISLEY - CANTINA - INITIATION',
-        'return': '',
+        'return': 'INT. MASSASSI OUTPOST - MAIN HANGAR DECK - ROAD BACK',
     },
     'Spider-man': {
         'initiation': '',
@@ -16,11 +16,11 @@ movieStages = {
     },
     'The Matrix': {
         'initiation': 'INT.  HOVERCRAFT - INITIATION',
-        'return': '',
+        'return': 'INT.  "EL" STATION (MATRIX) - DAY - ROAD BACK',
     },
     'The Lion King': {
         'initiation': 'EXT. EDGE OF THE JUNGLE - DAY - INITIATION',
-        'return': '',
+        'return': 'EXT. REFLECTING POOL - NIGHT - ROAD BACK',
     },
     'Hunger Games': {
         'initiation': '',
