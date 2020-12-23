@@ -3,7 +3,7 @@ import pandas as pd
 
 prefix = './movie_scripts/'
 sufix = '.txt'
-movieNames = ['Star Wars', 'Spider-man', 'The Matrix', 'The Lion King', 'Hunger Games']
+movieNames = ['Star Wars', 'The Matrix', 'The Lion King',]
 
 dataDir  = './data/base/'
 
@@ -38,7 +38,6 @@ def renameIndex(df):
 for movieName in movieNames:
     with open('{}{}{}'.format(prefix, movieName, sufix), 'r') as f:
         df = pd.read_csv('{}{}.csv'.format(dataDir, movieName))
-        print(df)
         df = renameIndex(df)
         chars = set()
         lines = f.readlines()
