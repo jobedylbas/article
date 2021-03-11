@@ -1,0 +1,190 @@
+---
+title: "Plots to Hero Journey Movies Analysis"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+# First, check if needed packages are installed and install them.
+pkgs <- c("igraph", "ggplot2", "knitr", "plyr", 'dplyr', 'tidyr', 'qgraph')
+for (pkg in pkgs) {
+  if(!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+    if (!require(pkg, character.only = TRUE)) stop("load failure: ", pkg)
+  }
+}
+
+library("igraph")
+library("ggplot2")
+library("plyr")
+library("qgraph")
+
+# Create const
+dataDir <- "./data"
+stages <- c("departure", "initiation", "return")
+movieNames <- c("The Matrix", "Star Wars", "The Lion King", "Hunger Games")
+```
+
+```{r}
+# Create plot with importance of 5 most characters in the history evolution
+for (movie in movieNames) {
+  csvFilename <- paste(dataDir, "static", paste(movie, ".csv", sep = ''), sep = '/')
+  csvFile <- read.csv(csvFilename, header = T, row.names = 1)
+  g <- graph_from_adjacency_matrix(as.matrix(csvFile), mode = c('undirected'), weighted = T)
+
+  pr <- t(head(as.data.frame(sort(page_rank(g, weights = E(g)$weight)$vector, decreasing = T)), 5))
+  print(pr)
+  df <- data.frame(c1 = c(0.0, 0.0, 0.0), c2 = c(0.0, 0.0, 0.0), c3= c(0.0, 0.0, 0.0), c4 = c(0.0, 0.0, 0.0), c5 = c(0.0, 0.0, 0.0))
+  chars <- colnames(pr)
+    
+  for (stage in stages) {
+    csvFilename <- paste(dataDir, "dynamic", movie, paste(stage, ".csv", sep = ''), sep = '/')
+    csvFile <- read.csv(csvFilename, header = T, row.names = 1)
+    
+    g <- graph_from_adjacency_matrix(as.matrix(csvFile), mode = c('undirected'), weighted = T)
+    t <- decompose(g)
+    g <- t[[which.max(unlist(lapply(t, vcount)))]]
+    
+    pr <- t(as.data.frame(sort(page_rank(g, weights = E(g)$weight)$vector, decreasing = T)))
+    for (char in chars) {
+      if (char %in% colnames(pr)) {
+        df[match(stage, stages), char] <- pr[1, char]
+      } else {
+        df[match(stage, stages), char] <- 0
+      }
+    }
+  }
+  df <- subset(df, select = -c(1:5))
+  df <- as.data.frame(t(df))
+  df$character <- rownames(df)
+  df <- df %>% gather(stage, pageRank, c(1, 2, 3))
+  df$stage <- as.numeric(df$stage)
+  colnames(df)[colnames(df) == 'character'] <- 'Character'
+  
+  p <- ggplot(df, aes(x = stage, y = pageRank, colour = Character, pch = Character, group = Character)) +
+    geom_point(size=2.5) + geom_line(size=1) + theme_bw() + 
+    scale_x_continuous('Stages', labels = c('Departure', 'Initiation', 'Return'), breaks = c(1,2,3)) + 
+    ylim(0.0, 0.35) + ylab('PageRank') +
+    theme(
+      panel.grid.minor.x = element_blank()
+    )
+  print(p)
+  #print(df)
+}
+```
+
+```{r}
+# Create plot with character metrics
+
+for (movie in movieNames) {
+  df <- data.frame(Stage=integer(), Nodes=integer(), introduced_nodes=integer(), removed_nodes=integer(), existing_nodes = integer())
+  chars <- c()
+  for (stage in stages) {
+    csvFilename <- paste(dataDir, "dynamic", movie, paste(stage, ".csv", sep = ''), sep = '/')
+    csvFile <- read.csv(csvFilename, header = T, row.names = 1)
+    
+    g <- graph_from_adjacency_matrix(as.matrix(csvFile), mode = c('undirected'), weighted = T)
+    
+    index = match(stage, stages)
+    
+    chars <- c(chars, list(V(g)[degree(g)>0]))
+    
+    df[index, "Nodes"] = length(V(g)[degree(g)>0])
+    df[index, "Stage"] = index
+    
+    if (index == 1) {
+      df[index, "existing_nodes"] = 0
+      df[index, "removed_nodes"] = 0
+      df[index, "introduced_nodes"] = df[index, "Nodes"]
+    } else {
+      df[index, "existing_nodes"] = length(intersect(chars[[index]], chars[[index-1]]))
+      df[index, "removed_nodes"] = length(setdiff(chars[[index-1]], chars[[index]]))
+      if (index == 2) {
+        df[index, "introduced_nodes"] = length(setdiff(chars[[index]], chars[[index-1]]))
+      } else {
+        df[index, "introduced_nodes"] = length(setdiff(setdiff(chars[[index]], chars[[index-1]]), setdiff(chars[[index]], chars[[index-2]])))
+      }
+    }
+  }
+  
+  df <- df %>% gather(Variable, Value, c(2:length(df)))
+  
+  p <- ggplot(df, aes(x = Stage, y = Value, colour = Variable, pch = Variable, group = Variable)) +
+  geom_point(size=2.5) + geom_line(size=1) + theme_bw() + 
+  scale_x_continuous('Stages', labels = c('Departure', 'Initiation', 'Return'), breaks = c(1,2,3)) +
+  scale_shape_manual(values = c(3, 4, 8, 15, 16, 17, 18, 12, 13, 14)) + ylim(0, max(df$Value))
+  theme(
+    panel.grid.minor.x = element_blank()
+  )
+  
+  print(p)
+}
+```
+
+
+```{r}
+# Create plot with network connection metrics
+
+for (movie in movieNames) {
+  df <- data.frame(Stage=integer(), Edges=integer(), edge_weight=integer())
+  chars <- c()
+  for (stage in stages) {
+    csvFilename <- paste(dataDir, "dynamic", movie, paste(stage, ".csv", sep = ''), sep = '/')
+    csvFile <- read.csv(csvFilename, header = T, row.names = 1)
+    
+    g <- graph_from_adjacency_matrix(as.matrix(csvFile), mode = c('undirected'), weighted = T)
+    
+    index = match(stage, stages)
+    df[index, "Stage"] = index
+    df[index, "Edges"] = length(E(g))
+    df[index, "edge_weight"] = sum(E(g)$weight)
+  }
+  df <- df %>% gather(Variable, Value, c(2:length(df)))
+  
+  p <- ggplot(df, aes(x = Stage, y = Value, colour = Variable, pch = Variable, group = Variable)) +
+  geom_point(size=2.5) + geom_line(size=1) + theme_bw() + 
+  scale_x_continuous('Stages', labels = c('Departure', 'Initiation', 'Return'), breaks = c(1,2,3)) +
+  scale_shape_manual(values = c(3, 4, 8, 15, 16, 17, 18, 12, 13, 14)) + ylim(0, 200)
+  theme(
+    panel.grid.minor.x = element_blank()
+  )
+  print(p)
+}
+  
+  #print(df)
+```
+
+
+```{r}
+# Plot graph of each final movie network with cluster
+#for (movie in movieNames) {
+  csvFilename <- paste(dataDir, "static", paste(movieNames[1], ".csv", sep = ''), sep = '/')
+  csvFile <- read.csv(csvFilename, header = T, row.names = 1)
+  g <- graph_from_adjacency_matrix(as.matrix(csvFile))
+  g$layout <- layout_as_star
+  plot(g,  vertex.label = NA)
+  smallworldness(g, B=1)
+  swnet<-igraph::watts.strogatz.game(dim=1, size=1000, nei=10, p=.1, loops=FALSE, multiple=FALSE)
+  swnet$layout <- layout_as_star
+  plot(swnet)
+  smallworldness(swnet, B=10)
+
+  #plot(g, vertex.color=membership(c), vertex.label = NA, vertex.size = 10)
+#}
+  set.seed(1)
+# a regular lattice. Even if the small-worldness is higher than three, the average path length is 
+# much higher than that of random networks.
+regnet<-igraph::watts.strogatz.game(dim=1, size=50, nei=10, p=0, loops=FALSE, multiple=FALSE)
+plot(regnet)
+smallworldness(regnet, B=1)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+

@@ -964,7 +964,8 @@ Uh-uh-uh-uh-uhBANZAI:
 Okay, we'll split the bill.
 He's in Shenzi's face, trying to get her attention:
 ED:
-Uh-uh-uh-uh-uhSHENZI:
+Uh-uh-uh-uh-uh
+SHENZI:
 to Ed
 What???
 Banzi sees the fleeing trio.
@@ -1805,8 +1806,8 @@ together in a great and glorious future!
 From all corners of the Pride lands, an serpentine invasion of hyenas
 creeps onto the land. The lionesses are silent.
 FADE TO BLACK:
+EXT. DESERT - DAY - INITIATION
 SEQ. 9 (SIMBA'S EXILE/TIMON & PUMBAA)
-EXT. DESERT - DAY
 Simba crosses the parched sand. He slips down a sand dune.
 TIME DISSOLVE TO:
 EXT. FARTHER INTO DESSERT - LATER
@@ -2261,7 +2262,7 @@ RAFIKI:
 It's time.
 He grabs his walking stick and runs out.
 SEQ. 15 (SIMBA AND NALA REUNITE)
-EXT. EDGE OF THE JUNGLE - DAY - INITIATION
+EXT. EDGE OF THE JUNGLE - DAY
 Timon and Pumbaa walk toward us, singing: (SONG: "THE LION SLEEPS TONIGHT")
 PUMBAA:
 A MEEH:
@@ -2773,7 +2774,7 @@ Stop!
 Rafiki approaches a curtain of tall reeds. He parts them, directing Simba:
 RAFIKI:
 Shhhh -- Look down there.
-EXT. REFLECTING POOL - NIGHT - ROAD BACK
+EXT. REFLECTING POOL - NIGHT
 Simba anxiously, cautiously looks in a pool of water. He sees the
 REFLECTION OF A LION.
 SIMBA:
@@ -2939,8 +2940,8 @@ kid-like
 Now I'm king of the jungle!
 looks around
 Where's my scepter?
-SEQ. 17.1 (PRE-BATTLE BONDING)
-CLOSE-UP - SIMBA'S FEET
+SEQ. 17.1 (PRE-BATTLE BONDING) - ROAD BACK
+CLOSE-UP - SIMBA'S FEET 
 running across desert.
 LONG SHOT - SAND DUNE
 As Simba crosses, a breeze erases bis tracks.

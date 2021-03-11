@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import pandas as pd
+import regex as re
 
 prefix = './movie_scripts/'
 sufix = '.txt'
-movieNames = ['Star Wars', 'The Matrix', 'The Lion King',]
+movieNames = ['Star Wars', 'The Matrix', 'The Lion King', 'Hunger Games']
 
 dataDir  = './data/base/'
 
@@ -16,23 +17,18 @@ def createEdges(df, chars):
                 df.at[char, charList[i]] = df.at[char, charList[i]] + 1
                 df.at[charList[i], char] = df.at[charList[i], char] + 1
 
-def checkIsChar(line):
-    spaceCounter = 0
-    for char in line:
-        if char == ' ':
-            spaceCounter = spaceCounter + 1
-        if spaceCounter > 3:
-            return False
-    return True
+def formatLine(line):
+    chars = ['<b>', '</b>', '\t', ':', ',', ';', '?', '!', '\'s', '\'', '-']
+    for char in char:
+        line.replace(char, '')
+    return line.replace('-', ' ').lower().strip()
 
 def renameIndex(df):
     dic = {}
     for row in df.index:
-        # print(df.columns[row+1])
         dic[row] = df.columns[row+1]
     df = df.drop(columns = ['Unnamed: 0'])
     df = df.rename(index=dic)
-    # print(df)
     return df
 
 for movieName in movieNames:
@@ -44,17 +40,32 @@ for movieName in movieNames:
         charsInScene = set()
         sceneCounter = 0
         for line in lines:
-            line = line.replace('<b>', '').replace('</b>', '').replace('\t', '').strip()
-            if line.startswith('INT') or line.startswith('EXT'):
-                createEdges(df, charsInScene)
-                charsInScene = set()
-                sceneCounter = sceneCounter + 1
-            else:
-                if checkIsChar(line):
+            line = line.replace('<b>', '').replace('</b>', '').replace('\t', '').replace(':', ' ').replace(',', ' ')
+            line = line.replace(';', ' ').replace('?', ' ').replace('!', ' ').replace('\'s', '').replace('\'', '')
+            line = line.replace('-', ' ').lower().strip()
+            if line != '':
+                # print(line)
+                if line.startswith('int.') or line.startswith('ext.'):
+                    createEdges(df, charsInScene)
+                    charsInScene = set()
+                    sceneCounter = sceneCounter + 1
+                else:
+                    splitedLine = line.replace('.', ' ').split(' ')
                     for char in df.columns:
-                        if char in line:
+                        if char.lower() == line:
                             charsInScene.add(char)
                             break
+                    for char in df.columns:
+                        if ' ' in char:
+                            if (char.lower() in line):
+                                charsInScene.add(char)
+                                break
+                        else: 
+                            if (char.lower() in line.split(' ')):
+                                charsInScene.add(char)
+                                break
+        createEdges(df, charsInScene)
+        sceneCounter = sceneCounter + 1
         df.to_csv('./data/static/{}.csv'.format(movieName))   
         print(sceneCounter)
 

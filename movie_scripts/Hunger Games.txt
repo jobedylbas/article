@@ -1123,7 +1123,8 @@ your stylists. You’re not going to
 like what they do to you, but no
 matter what it is, don’t resist.
 KATNISS:
-ButHAYMITCH:
+But
+HAYMITCH:
 No buts. Don’t resist.
 Haymitch takes the bottle of clear liquid and leaves the
 room. Katniss and Peeta exchange glances. The train is
@@ -1145,7 +1146,7 @@ rich.
 CUT TO:
 29.
 GROOM ME:
-INT. Prep house- DAY.
+INT. Prep house- DAY. - INITIATION
 VENIA, Katniss’ assistant groomer from the capitol, is
 waxing Katniss’ legs. Katniss is naked, except for
 underwear, a bra, and a tank top. Just as Effie, she speaks
@@ -4663,7 +4664,7 @@ tributes of disrict twelve!
 Katniss and Peeta spit out the berries.
 CUT TO:
 I DIDN’T BREAK MY PROMISE
-INT. Hospital- DAY.
+INT. Hospital- DAY. - ROAD BACK
 Katniss paces back and forth. She is cleaned to pefection,
 wearing her hair down and a simple outfit. An avox girl
 comes out from the room.
